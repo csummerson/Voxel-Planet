@@ -8,18 +8,19 @@ export class VoxelPlanet {
     voxelResolution = 1,
     chunkSize = 32,
     shellThickness = 20,
+    surfaceOffset = 8, 
   } = {}) {
     this.radius = radius;
     this.voxelResolution = voxelResolution;
     this.chunkSize = chunkSize;
     this.shellThickness = shellThickness;
+    this.surfaceOffset = surfaceOffset;
 
     this.group = new THREE.Group();
     this.group.name = 'VoxelPlanet';
 
     this.chunks = [];
 
-    // store per-voxel density modifications (keyed by voxel grid coord)
     this.densityModifications = new Map();
 
     this.computeChunkLayout();
@@ -27,7 +28,7 @@ export class VoxelPlanet {
   }
 
   computeChunkLayout() {
-    const extent = this.radius + this.shellThickness;
+    const extent = this.radius + this.shellThickness + (this.surfaceOffset || 0);
     const worldMin = -extent;
     const worldMax = extent;
 
@@ -68,21 +69,16 @@ export class VoxelPlanet {
   }
 
   samplePlanetDensity(point) {
-    // point is world-space
     const dist = point.length();
 
-    // outside stored shell -> air
     if (Math.abs(dist - this.radius) > this.shellThickness) {
       return 1; // air
     }
 
-    // baseline spherical surface (negative = solid, positive = empty)
-    const base = dist - this.radius;
+    const base = dist - (this.radius + (this.surfaceOffset || 0));
 
-    // procedural terrain
     const terrain = getDensityAt(point);
 
-    // apply any voxel-grid aligned density modifications
     const gx = Math.round(point.x / this.voxelResolution) * this.voxelResolution;
     const gy = Math.round(point.y / this.voxelResolution) * this.voxelResolution;
     const gz = Math.round(point.z / this.voxelResolution) * this.voxelResolution;
@@ -92,11 +88,9 @@ export class VoxelPlanet {
     return base + terrain + modification;
   }
 
-  // Apply a spherical density brush at world-space centerPoint. Positive strength adds, negative removes.
   modifyDensity(centerPoint, strength, radius) {
     const rSq = radius * radius;
 
-    // compute bounds in voxel grid coordinates
     const minX = Math.floor((centerPoint.x - radius) / this.voxelResolution) * this.voxelResolution;
     const maxX = Math.ceil((centerPoint.x + radius) / this.voxelResolution) * this.voxelResolution;
     const minY = Math.floor((centerPoint.y - radius) / this.voxelResolution) * this.voxelResolution;
@@ -122,7 +116,6 @@ export class VoxelPlanet {
       }
     }
 
-    // Regenerate any chunks whose AABB intersects the brush sphere
     const affected = new Set();
     for (const chunk of this.chunks) {
       const aMin = chunk.origin.clone();
@@ -136,6 +129,23 @@ export class VoxelPlanet {
   generate() {
     for (const chunk of this.chunks) {
       chunk.generateMesh();
+    }
+  }
+
+  async generateAsync(progressCallback = null, batchSize = 8) {
+    const total = this.chunks.length;
+    let processed = 0;
+
+    for (let i = 0; i < total; i += batchSize) {
+      const end = Math.min(i + batchSize, total);
+      for (let j = i; j < end; j++) {
+        this.chunks[j].generateMesh();
+        processed++;
+      }
+      if (progressCallback) {
+        try { progressCallback(processed / total); } catch(e) {}
+      }
+      await new Promise(resolve => setTimeout(resolve, 0));
     }
   }
 
@@ -153,9 +163,7 @@ export class VoxelPlanet {
   }
 }
 
-// Helper: sphere-AABB intersection test
 function sphereIntersectsAABB(center, radius, aMin, aMax) {
-  // compute squared distance from sphere center to AABB
   let dmin = 0;
   if (center.x < aMin.x) dmin += (center.x - aMin.x) ** 2;
   else if (center.x > aMax.x) dmin += (center.x - aMax.x) ** 2;

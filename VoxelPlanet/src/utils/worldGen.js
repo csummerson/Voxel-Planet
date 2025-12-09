@@ -39,7 +39,7 @@ export function getDensityAt(point) {
 
   const terrain = continents + ridgeShape + detail + microDetail;
 
-  const elevation = terrain;
+  const elevation = -terrain;
   let materialOffset = 0;
 
   if (elevation < -8) {
@@ -65,26 +65,17 @@ export function getMaterialAt(point) {
   const y = point.y;
   const z = point.z;
 
-  const c = noise3(x * CONTINENT_FREQ, y * CONTINENT_FREQ, z * CONTINENT_FREQ);
-  const continents = c * CONTINENT_AMP;
-  const r = noise3(x * RIDGE_FREQ, y * RIDGE_FREQ, z * RIDGE_FREQ);
-  const ridgeShape = ridged(r) * RIDGE_AMP;
-  const d = noise3(x * DETAIL_FREQ, y * DETAIL_FREQ, z * DETAIL_FREQ);
-  const detail = d * DETAIL_AMP;
-  const m = noise3(x * MICRO_FREQ, y * MICRO_FREQ, z * MICRO_FREQ);
-  const microDetail = m * MICRO_AMP;
+  const distance = Math.sqrt(x * x + y * y + z * z);
 
-  const elevation = continents + ridgeShape + detail + microDetail;
-
-  if (elevation < -8) {
+  if (distance < 20) {
     return 0x1a4d7f;  // water
-  } else if (elevation < -2) {
+  } else if (distance < 40) {
     return 0xd4af37;  // sand
-  } else if (elevation < 15) {
+  } else if (distance < 60) {
     return 0x6ba83f;  // grass
-  } else if (elevation < 35) {
+  } else if (distance < 80) {
     return 0x888888;  // stone
   } else {
-    return 0xffffff;  // white
+    return 0xffffff;  // snow 
   }
 }

@@ -7,7 +7,7 @@ export class TerrainEditor {
     this.raycaster = new THREE.Raycaster();
     this.raycastDistance = 30;
     this.brushRadius = 3;
-    this.brushStrength = 5;
+    this.brushStrength = 10;
     
     document.addEventListener('mousedown', (e) => this.onMouseDown(e));
     

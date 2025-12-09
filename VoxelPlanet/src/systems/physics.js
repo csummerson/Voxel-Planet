@@ -175,7 +175,7 @@ export function updatePlanetCamera(sceneManager, planet, delta, options = {}) {
   }
 
   if (options.keepAboveSurface && planet && planet.radius) {
-    const minAltitude = options.minAltitude ?? 0.5;
+    const minAltitude = options.minAltitude ?? 0.1;
     if (pos.length() < minAltitude) pos.setLength(minAltitude);
   }
 }
