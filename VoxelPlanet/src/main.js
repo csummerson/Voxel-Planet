@@ -8,3 +8,8 @@ const sceneManager = new SceneManager();
 const gameLoop = new GameLoop();
 const input = new Input();
 
+gameLoop.onUpdate(() => {
+  sceneManager.render();
+});
+
+gameLoop.start();
