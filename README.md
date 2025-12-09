@@ -3,7 +3,7 @@
 
 # Overview
 
-This game was created for my CS599 final project. It is a solar system demo with the ability to travel to each planet and deform voxel terrain.
+This game was created for my CS599 final project. It is a solar system demo with the ability to travel to each planet and deform voxel terrain, mainly focused on **User Interaction**.
 
 # Controls
 - Click a planet to travel there
