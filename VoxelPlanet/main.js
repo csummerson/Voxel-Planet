@@ -211,7 +211,7 @@ sceneManager.renderer.domElement.addEventListener('click', (e) => {
   }
 });
 
-sceneManager.camera.position.set(0, 150, 300);
+sceneManager.camera.position.set(0, 120, 225);
 sceneManager.camera.lookAt(0, 0, 0);
 
 const clock = new THREE.Clock();
@@ -266,7 +266,7 @@ function animate() {
         sceneManager.camera.quaternion.copy(_savedCameraState.quaternion);
         _savedCameraState = null;
       } else {
-        sceneManager.camera.position.set(0, 150, 300);
+        sceneManager.camera.position.set(0, 120, 225);
         sceneManager.camera.lookAt(0, 0, 0);
       }
       inPlanetView = false;
