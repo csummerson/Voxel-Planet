@@ -17,6 +17,7 @@ export class Chunk {
   }
 
   generateMesh() {
+    // chunks need overlaps due to surface nets being a "dual" algorithm.
     const nx = this.size + 2;
     const ny = this.size + 2;
     const nz = this.size + 2;

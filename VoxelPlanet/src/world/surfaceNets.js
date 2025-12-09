@@ -108,9 +108,9 @@ export function surfaceNetsMesher(samples, dims, options = {}) {
     const vy = v1y - v0y;
     const vz = v1z - v0z;
 
-    const nxn = (uy * vz - uz * vy);
-    const nyn = (uz * vx - ux * vz);
-    const nzn = (ux * vy - uy * vx);
+    const nxn = (vy * uz - vz * uy);
+    const nyn = (vz * ux - vx * uz);
+    const nzn = (vx * uy - vy * ux);
 
     const len = Math.hypot(nxn, nyn, nzn) || 1;
     const nnx = nxn / len;

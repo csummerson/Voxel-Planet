@@ -39,8 +39,23 @@ export class SceneManager {
     }
 
     this.keys = {};
-    window.addEventListener('keydown', e => this.keys[e.code] = true);
-    window.addEventListener('keyup',   e => this.keys[e.code] = false);
+    this.mode = 'debug';
+    this._lastSpaceTime = 0;
+
+    window.addEventListener('keydown', (e) => {
+      this.keys[e.code] = true;
+      if (e.code === 'Space' && !e.repeat) {
+        const now = performance.now();
+        if (now - this._lastSpaceTime < 300) {
+          this.mode = this.mode === 'debug' ? 'survival' : 'debug';
+          console.log('Mode toggled to', this.mode);
+          this._lastSpaceTime = 0;
+        } else {
+          this._lastSpaceTime = now;
+        }
+      }
+    });
+    window.addEventListener('keyup', (e) => this.keys[e.code] = false);
 
     this.camPitchDeg = 0;
     this.yawRad = 0;
