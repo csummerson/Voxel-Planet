@@ -103,6 +103,24 @@ function setHint(txt) { hintOverlay.innerText = txt; }
 function showHint() { hintOverlay.style.display = 'block'; }
 function hideHint() { hintOverlay.style.display = 'none'; }
 
+const planetModeHint = document.createElement('div');
+planetModeHint.style.position = 'absolute';
+planetModeHint.style.right = '12px';
+planetModeHint.style.bottom = '12px';
+planetModeHint.style.padding = '8px 12px';
+planetModeHint.style.background = 'rgba(0,0,0,0.6)';
+planetModeHint.style.color = '#fff';
+planetModeHint.style.fontFamily = 'sans-serif';
+planetModeHint.style.borderRadius = '6px';
+planetModeHint.style.zIndex = '9999';
+planetModeHint.style.pointerEvents = 'none';
+planetModeHint.style.display = 'none';
+planetModeHint.innerText = 'Double-space: Swap Debug / Physics mode';
+document.body.appendChild(planetModeHint);
+
+function showPlanetModeHint() { planetModeHint.style.display = 'block'; }
+function hidePlanetModeHint() { planetModeHint.style.display = 'none'; }
+
 let _savedCameraState = null;
 async function enterPlanetView(planetObj) {
   if (inPlanetView) return;
@@ -175,6 +193,7 @@ async function enterPlanetView(planetObj) {
   } catch (e) {}
   sceneManager.renderer.domElement.style.cursor = 'none';
   setHint('Press X to return to solar system.');
+  showPlanetModeHint();
 }
 
 sceneManager.renderer.domElement.addEventListener('click', (e) => {
@@ -252,6 +271,7 @@ function animate() {
       }
       inPlanetView = false;
       setHint('Click a planet to land');
+      hidePlanetModeHint();
     }
   }
   lastXDown = xPressed;
