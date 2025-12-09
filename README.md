@@ -18,4 +18,4 @@ This game was created for my CS599 final project. It is a solar system demo with
 - Deformable terrain of the voxels
 - Atmospheric shader to approximate Rayleigh Scattering
 - Debug and physics based motion orbiting each planet
-- Solar system simulator to allow a play to select which planet to visit
+- Solar system simulator to allow a player to select which planet to visit
