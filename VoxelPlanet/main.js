@@ -37,6 +37,20 @@ let localSunMesh = null;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
+const groupIdDisplay = document.createElement('div');
+groupIdDisplay.style.position = 'absolute';
+groupIdDisplay.style.left = '12px';
+groupIdDisplay.style.top = '12px';
+groupIdDisplay.style.padding = '8px 12px';
+groupIdDisplay.style.background = 'rgba(0,0,0,0.6)';
+groupIdDisplay.style.color = '#fff';
+groupIdDisplay.style.fontFamily = 'sans-serif';
+groupIdDisplay.style.borderRadius = '6px';
+groupIdDisplay.style.zIndex = '10000';
+groupIdDisplay.style.pointerEvents = 'none';
+groupIdDisplay.innerText = 'Group ID: 3564';
+document.body.appendChild(groupIdDisplay);
+
 const loadingOverlay = document.createElement('div');
 loadingOverlay.style.position = 'absolute';
 loadingOverlay.style.left = '0';
